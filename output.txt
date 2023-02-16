@@ -1,3 +1,0 @@
-nome=Miguer,
-chat_id=5672006957,
-type=private    

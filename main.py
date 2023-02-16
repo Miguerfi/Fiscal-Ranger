@@ -1,10 +1,11 @@
+from asyncio import events
 import logging
+from types import NoneType
 import telegram
 from telegram import Update
 from telegram import Message
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
-
-get_user = telegram.Bot("6141322753:AAEbBj4is3bEXtggY5UzPkb_L1cA6lAuvCo")
+from coins.management.commands.coins import CoinsConvApi
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
@@ -13,23 +14,16 @@ logging.basicConfig(
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=f"hi {update.effective_chat.first_name},I'm at an experimental level, so don't expect too much.",
-    )
-    print(update.effective_chat)
-    with open('output.txt','w') as f:
-        f.write(f'''
-nome={update.effective_chat.first_name},
-chat_id={update.effective_chat.id},
-type={update.effective_chat.type}
-    ''')
-
-async def clear(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update._bot.delete_message(
-        chat_id=update.effective_chat.id,
-        message_id=update.effective_message.message_id,
+        text="to convert currencies in real time send in this pattern:/convert USD-BRL",
     )
 
-
+async def convert(update:Update,context:ContextTypes.DEFAULT_TYPE):
+    currence = CoinsConvApi()
+    if not context.args:
+        await context.bot.send_message(chat_id=update.effective_chat.id,text="incorrect syntax please use the correct: /convert USD-BRL")
+    else:
+        coins = currence.get_coins(coins=str(context.args[0])) 
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=coins) 
 if __name__ == "__main__":
     application = (
         ApplicationBuilder()
@@ -38,9 +32,7 @@ if __name__ == "__main__":
     )
 
     start_handler = CommandHandler("start", start)
-    clear_handler = CommandHandler("clear", clear)
-    application.add_handler(clear_handler)
-
+    convert_handler = CommandHandler("convert",convert)
     application.add_handler(start_handler)
-
+    application.add_handler(convert_handler)
     application.run_polling()
