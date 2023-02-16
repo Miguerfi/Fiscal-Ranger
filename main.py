@@ -27,7 +27,7 @@ async def convert(update:Update,context:ContextTypes.DEFAULT_TYPE):
 if __name__ == "__main__":
     application = (
         ApplicationBuilder()
-        .token("6141322753:AAEbBj4is3bEXtggY5UzPkb_L1cA6lAuvCo")
+        .token("ur_token_here")
         .build()
     )
 
