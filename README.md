@@ -1,2 +1,2 @@
 #Fiscal Ranger a Telegram bot.
-### check in real time the value of ur country money based on dolar
+### check the currence of the coins around the world
